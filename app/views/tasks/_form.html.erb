@@ -1,0 +1,61 @@
+<%= form_for(@task, html: {multipart: true, class: "form-horizontal", role: "form"}) do |f| %>
+  <% if @task.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@task.errors.count, "error") %> prohibited this task from being saved:</h2>
+
+      <ul>
+      <% @task.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= f.label :name, class: 'col-sm-3 control-label' %>
+    <div class="col-sm-6">
+      <%= f.text_field :name, class: 'form-control', autofocus: true %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :priority, class: 'col-sm-3 control-label' %>
+    <div class="col-sm-6">
+      <%= f.number_field :priority, class: 'form-control' %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= label_tag :photo, nil, :class => 'col-sm-3 control-label' %>
+    <div class="col-sm-6">
+      <%= file_field_tag :photo, class: 'form-control' %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :user_id, class: 'col-sm-3 control-label' %>
+    <div class="col-sm-6">
+      <%= collection_select(:task, :user_id, User.all, :id, :email, {
+            :include_blank => true,
+            :prompt => true
+          }, { class: 'form-control' }) %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :parent_id, class: 'col-sm-3 control-label' %>
+    <div class="col-sm-6">
+      <%= collection_select(:task, :parent_id, Task.flat_tree, :id, :name, {
+            disabled: lambda{|task| task.id == @task.id },
+            include_blank: true,
+            prompt: true
+          }, { class: 'form-control' }) %>
+    </div>
+  </div>
+
+  <div class="form-group vpad">
+    <div class="col-md-offset-5 col-sm-offset-5 col-xs-offset-3 col-sm-2 col-xs-6">
+      <%= f.submit "Save Task", class: 'btn btn-primary navbar-btn center-block' %>
+    </div>
+  </div>
+<% end %>

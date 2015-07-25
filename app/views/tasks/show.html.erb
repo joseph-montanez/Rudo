@@ -1,0 +1,63 @@
+<ol class="breadcrumb">
+  <li><a href="#">Home</a></li>
+  <li><%= link_to "Tasks", tasks_path %></li>
+  <% if @task.depth > 0 %>
+    <% @task.ancestors.each do |parent, n| %>
+      <li><%= link_to parent.name, parent %></li>
+    <% end %>
+  <% end %>
+  <li class="active"><%= @task.name %></li>
+</ol>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-3 col-xs-3 text-right"><strong>Name:</strong></div>
+    <div class="col-sm-4"><%= @task.name %></div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-3 col-xs-3 text-right"><strong>Priority:</strong></div>
+    <div class="col-sm-4"><%= @task.priority_level %> (<%= @task.priority %>)</div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-3 col-xs-3 text-right"><strong>User:</strong></div>
+    <div class="col-sm-4"><%= @task.user.email %></div>
+  </div>
+
+  <% if !@task.parent.nil? %>
+    <div class="row">
+      <div class="col-sm-3 col-xs-3 text-right"><strong>Parent:</strong></div>
+      <div class="col-sm-4"><%= @task.parent.name %></div>
+    </div>
+  <% end %>
+
+  <% if !@task.children.nil? %>
+    <div class="row vpad">
+      <div class="col-sm-3 col-xs-3 text-right"></div>
+      <div class="col-sm-4">
+        <strong>Sub Tasks</strong>
+        <div class="list-group vpad">
+          <% @task.children.each do |subtask, n| %>
+            <%= link_to(subtask, class: 'list-group-item') do %>
+              <span class="glyphicon glyphicon-new-window"></span>
+              <%= subtask.name %>
+            <% end %>
+          <% end %>
+          <%= link_to(new_task_path, class: 'list-group-item') do %>
+            <span class="glyphicon glyphicon-plus"></span>
+            Add Task
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<div class="container-fluid vpad">
+  <div class="row">
+    <div class="col-md-offset-5 col-sm-offset-5 col-xs-offset-3 col-sm-2 col-xs-6">
+      <%= link_to 'Edit Task', edit_task_path(@task), class: 'btn btn-primary' %>
+    </div>
+  </div>
+</div>
